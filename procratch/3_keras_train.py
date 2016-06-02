@@ -46,7 +46,7 @@ random.shuffle(training_paths)
 
 
 training_data = np.array(map(file_to_array, training_paths))
-training_data = np.reshape(training_data, (-1, 3000))
+training_data = np.reshape(training_data, (-1, helpers.ARRAY_DIM ))
 training_labels = np.array(map(helpers.file_to_label, training_paths))
 
 print training_data.shape
@@ -62,7 +62,7 @@ print map(lambda x: x.shape, training_data)
 
 model = Sequential()
 
-model.add(Dense(input_dim=3000, output_dim=200, input_shape=(3, 25, 40)))
+model.add(Dense(input_dim=helpers.ARRAY_DIM, output_dim=200, input_shape=(3, 25, 40)))
 model.add(Activation("tanh"))
 
 model.add(Dense(input_dim=100, output_dim=50))

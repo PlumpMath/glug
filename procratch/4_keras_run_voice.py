@@ -26,6 +26,7 @@ while(True):
     print "Taking screenshot in... NOW!"
 
     timestr = time.strftime("%Y%m%d-%H%M%S")
+    timestr = "now"
     filename = helpers.TESTDIR + "screencap-" + timestr + ".png"
     os.system("screencapture -x " + filename)
 
@@ -34,7 +35,7 @@ while(True):
     img = image.load_img(filename)
     img = img.resize((helpers.IMAGE_WIDTH, helpers.IMAGE_HEIGHT), PIL.Image.ANTIALIAS)
     imgarr = np.array(image.img_to_array(img))
-    imgarr = np.reshape(imgarr, (-1, 3000))
+    imgarr = np.reshape(imgarr, (-1, helpers.ARRAY_DIM))
 
     ## LOAD MODULE
 
