@@ -52,7 +52,7 @@ while(True):
     print textchance
 
     if(chance > 0.5):
-        voice = random.choice(helpers.allvoices)
+        voice = random.choice(helpers.normalvoices)
         os.system("say -v " + voice + " You are " + textchance)
 
     time.sleep(3)

@@ -12,12 +12,14 @@ MODELDIR = "MODELS/"
 TESTDIR = "TESTCAPTURES/"
 
 ## IMAGE DIMENSIONS
-IMAGE_WIDTH = 120 
-IMAGE_HEIGHT = 75 
+IMAGE_WIDTH = 40 
+IMAGE_HEIGHT = 25 
 ARRAY_DIM = IMAGE_WIDTH * IMAGE_HEIGHT * 3
 
 _slacking_text = ["SUPER LOW", "LOW", "KINDA LOW", "NOT SURE", "GETTING OFF TRACK", "PROBABLY PROCRASTINATING", "TOTALLY SLACKING"]
 _slacking_probability = [0.125, 0.25, 0.375, 0.5, 0.625, 0.75, 0.875]
+
+normalvoices = ["Alex"]
 
 allvoices = ["Agnes", "Albert", "Alex", "Alice", "Alva", "Amelie", "Anna", "Ava", "Bad News", "Bahh", "Bells", "Boing", "Bruce", "Bubbles", "Carmit", "Cellos", "Damayanti", "Daniel", "Deranged", "Diego", "Ellen", "Fiona", "Fred", "Good News", "Hysterical", "Ioana", "Joana", "Junior", "Kanya", "Karen", "Kathy", "Kyoko", "Laura", "Lekha", "Luciana", "Maged", "Mariska", "Mei-Jia", "Melina", "Milena", "Moira", "Monica", "Nora", "Paulina", "Pipe Organ", "Princess", "Ralph", "Samantha", "Sara", "Satu", "Sin-ji", "Tessa", "Thomas", "Ting-Ting", "Trinoids", "Veena", "Vicki", "Victoria", "Whisper", "Xander", "Yelda", "Yuna", "Zarvox", "Zosia", "Zuzana"]
 
@@ -45,7 +47,8 @@ def file_to_array(filename, reduce=True):
 
     nparr = np.asarray(imgarr)
 
-    return np.reshape(nparr, (-1, IMAGE_WIDTH * IMAGE_HEIGHT * 3))
+    return nparr
+#return np.reshape(nparr, (-1, IMAGE_WIDTH * IMAGE_HEIGHT * 3))
 
 def file_to_label(filename):
     import re
