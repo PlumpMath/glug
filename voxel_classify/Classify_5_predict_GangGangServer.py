@@ -1,23 +1,14 @@
-import socket
-import pickle
-import time
-import numpy as np
 import GangGang
-
 import Classify_helpers as ch
 
-import sys, os, subprocess
-import random
+import subprocess
+from functools import partial
+from pprint import pprint
 
 import numpy as np
 from keras.preprocessing import image
 from keras.models import model_from_json
 
-from functools import partial
-
-from pprint import pprint
-
-geometry = ["6poly", "tetrahedra", "cone", "cylinder"]
 
 def load_model(model_suffix):
 
@@ -30,6 +21,8 @@ def load_model(model_suffix):
 
 
 def predict(model, data):
+
+    geometry = ["6poly", "tetrahedra", "cone", "cylinder"]
 
     ## PREDICT
 
