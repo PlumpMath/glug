@@ -39,7 +39,7 @@ def predict(model, data):
     prediction['prediction'] = geometry[predict_index]
 
     say_message = "predicted:" + geometry[predict_index]
-    subprocess.Popen(["say", say_message])
+    subprocess.Popen(["say", say_message]) #only works on osx
     
     pprint(prediction)
 
