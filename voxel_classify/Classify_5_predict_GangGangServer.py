@@ -2,125 +2,68 @@ import socket
 import pickle
 import time
 import numpy as np
+import GangGang
 
-def recv_timeout(the_socket , timeout=1):
-    the_socket.setblocking(0)
-     
-    total_data=[]
-    data=''
-     
-    begin = time.time()
+import Classify_helpers as ch
 
-    while True:
-        #if you got some data, then break after timeout
-        if total_data and time.time() - begin > timeout:
-            break
-        #if you got no data at all, wait a little longer, twice the timeout
-        elif time.time() - begin > timeout * 2:
-            break
-        #recv something
-        try:
-            data = the_socket.recv(8192)
-            if data:
-                total_data.append(data)
-                #change the beginning time for measurement
-                begin=time.time()
-            else:
-                #sleep for sometime to indicate a gap
-                time.sleep(0.1)
-        except:
-            pass
-    #join all parts to make final string
-    return ''.join(total_data)
+import sys, os, subprocess
+import random
 
-def recv_unpickle(socket, custom_function):
-    data = recv_timeout(socket)
-    if len(data) > 0:
-        try:
-            process_data( pickle.loads(data) , socket, custom_function)
-        except EOFError, e:
-            return None
+import numpy as np
+from keras.preprocessing import image
+from keras.models import model_from_json
 
-def process_data(data, socket, custom_function):
+from functools import partial
 
-    if type(data).__name__ != 'list':
-        raise TypeError('data is not a list!') 
+from pprint import pprint
 
-    result = custom_function(data)
-    
-    socket.sendall(str(result))
+geometry = ["6poly", "tetrahedra", "cone", "cylinder"]
 
+def load_model(model_suffix):
 
-def listen_and_execute(host, port, custom_function):
-    serversocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    serversocket.bind((host, port))
-    serversocket.listen(5) # become a server socket, maximum 5 connections
-
-    while True:
-        conn, addr = serversocket.accept()
-        recv_unpickle(conn, custom_function)
-
-############
-############
-############
-
-
-def sumsum(data):
-    import Classify_helpers as ch
-
-    import sys, os
-    import random
-
-    import numpy as np
-    from keras.preprocessing import image
-    from keras.models import model_from_json
-
-    MODEL_SUFFIX = "6poly_tetra_cone_cyl__e200_b16"
-    
-    ## LOAD DATA
-
-    geometry = ["6poly", "tetrahedra", "cone", "cylinder"]
-
-    predict_data = np.array([data])
-
-    print predict_data
-    print predict_data.shape
-    
-
-    ## LOAD MODULE
-
-    model = model_from_json(open(ch.MODELDIR + ch.MODEL_ARCH_PREFIX + MODEL_SUFFIX + '.json').read())
-    model.load_weights(ch.MODELDIR + ch.MODEL_WEIGHTS_PREFIX + MODEL_SUFFIX + '.h5')
+    ## LOAD MODEL
+    model = model_from_json(open(ch.MODELDIR + ch.MODEL_ARCH_PREFIX + model_suffix + '.json').read())
+    model.load_weights(ch.MODELDIR + ch.MODEL_WEIGHTS_PREFIX + model_suffix + '.h5')
     model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
+    return model
+
+
+def predict(model, data):
+
     ## PREDICT
+
+    predict_data = np.array([data])
 
     classes = model.predict(predict_data)
 
     ## REPRESENT
+
+    prediction = {}
+    prediction['stats'] = dict(zip(geometry, classes[0].tolist()))
+
+    predict_index = int(np.argmax(classes))
+    prediction['prediction'] = geometry[predict_index]
+
+    say_message = "predicted:" + geometry[predict_index]
+    subprocess.Popen(["say", say_message])
     
-    sendmessage = ""
+    pprint(prediction)
 
-    for g in zip(geometry, classes[0]):
-        sendmessage += ' '.join((g[0], ":", "{:.8f}%".format(g[1]) , "\n"))
-
-    predict_index = np.argmax(classes)
-
-    message =  "predicted:" + geometry[predict_index]
-    sendmessage += "\n\n"
-    sendmessage += "PREDICTED: " + geometry[predict_index]
-
-    print message
-    os.system("say " + message)
-
-    return sendmessage
-
+    return prediction
 
 if __name__ == "__main__":
 
     host = '172.16.15.1'
-    port = 9092
+    port = 9093
 
-    listen_and_execute(host, port, sumsum)
+    MODEL_SUFFIX = "6poly_tetra_cone_cyl__e200_b16"
+
+    model = load_model(MODEL_SUFFIX)
+
+    # 'preload' the predict function with a model by partial application
+    predict_with_model = partial(predict, model)
+    
+    GangGang.server(host, port, predict_with_model)
 
 
