@@ -2,9 +2,16 @@
 
 ![160612_prototype_1.gif](https://github.com/dantaeyoung/glug/blob/master/voxel_classify/MEDIA/160612_prototype_1.gif)
 
-Uses [GangGang](https://github.com/dantaeyoung/GangGang/) to send data to and fro a computer running Python (as opposed to GH's IronPython).
 
-#### Instructions:
+#### Requirements
+
+A computer running (real) Python, a computer running Rhino/GH/IronPython.
+
+I used OSX and an instance of Windows/Rhino/GH/IronPython running in VMWare. This may be possible all on the same computer in Windows between 'normal Python' and IronPython, but I haven't tried it.
+
+[GangGang](https://github.com/dantaeyoung/GangGang/) is used to send data between both instances of Python. Some other Python libraries and GH libraries may be necessary.
+
+#### Instructions (may require some weaking):
 
 1. `Classify_1_generate_training_set.ghx`. This should generate randomly rotated tetrahedra, cylinders, cones, and rectangular prisms, rotated, voxelized, and output as a 1-D string of 0/1 to indicate voxel or not-voxel.
 2. `Classify_2_train_model.py`. Trains a model in Keras, saves it.
