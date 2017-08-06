@@ -14,7 +14,7 @@ I used OSX and an instance of Windows/Rhino/GH/IronPython running in VMWare. Thi
 
 [GangGang](https://github.com/dantaeyoung/GangGang/) is used to send data between both instances of Python. Some other Python libraries and GH libraries may be necessary.
 
-#### Instructions (may require some weaking):
+#### Instructions (may require some tweaking):
 
 1. `Classify_1_generate_training_set.ghx`. This should generate randomly rotated tetrahedra, cylinders, cones, and rectangular prisms, rotated, voxelized, and output as a 1-D string of 0/1 to indicate voxel or not-voxel.
 2. `Classify_2_train_model.py`. Trains a model in Keras, saves it.
