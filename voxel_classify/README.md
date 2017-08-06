@@ -2,6 +2,9 @@
 
 ![160612_prototype_1.gif](https://github.com/dantaeyoung/glug/blob/master/voxel_classify/MEDIA/160612_prototype_1.gif)
 
+#### Description:
+
+---> [**Click for Vimeo description/explanation.**](https://www.youtube.com/watch?v=pn8yuOofb4U) <---
 
 #### Requirements
 
@@ -16,9 +19,9 @@ I used OSX and an instance of Windows/Rhino/GH/IronPython running in VMWare. Thi
 1. `Classify_1_generate_training_set.ghx`. This should generate randomly rotated tetrahedra, cylinders, cones, and rectangular prisms, rotated, voxelized, and output as a 1-D string of 0/1 to indicate voxel or not-voxel.
 2. `Classify_2_train_model.py`. Trains a model in Keras, saves it.
 3. `Classify_5_predict_GangGangServer.py`. Loads Keras model, opens a GangGang server, waits for messages from client (Grasshopper).
-4. `Classify_3_voxelize_and_send.ghx`. In GH, grabs the selected object, voxelizes it as JSON data, sends it via GangGang to server, gets result back.
+4. `Classify_3_voxelize_and_send.ghx`. In GH, grabs the selected object, voxelizes it as JSON data, sends it via GangGang to server, gets result back. As a nice bonus, even says the result out loud on OSX. 
 
-### Loose notes/thoughts:
+#### Loose notes/thoughts:
 
 - IronPython is a pain. Some method to create a 'headless' Python server and to run real Python code in Grasshopper would be amazing. Also, really looking forward to [GH_CPython](https://github.com/MahmoudAbdelRahman/GH_CPython).
 - There's probably a more simple way to do this with regression.
