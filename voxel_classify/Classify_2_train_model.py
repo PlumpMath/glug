@@ -1,18 +1,11 @@
 import Classify_helpers as ch
-import json
-import os
-import random
-import sys
-import re
 import numpy as np
-from functools import partial
+import sys
 
 from keras.models import Sequential
-from keras.layers import Dense, Activation
 from keras.optimizers import SGD
 from keras.layers.convolutional import Convolution2D, MaxPooling2D
 from keras.layers.core import Dense, Dropout, Activation, Flatten
-from keras.utils import np_utils, generic_utils
 
 if len(sys.argv) < 2:
     print "ERROR: provide suffix for model file"
@@ -31,7 +24,7 @@ def save_model_to_file(model, MODEL_SUFFIX):
 def makeCNN():
     model = Sequential()
 
-    model.add(Convolution2D(32, 3, 3, border_mode='same', input_shape=(3, helpers.IMAGE_HEIGHT, helpers.IMAGE_WIDTH)))
+    model.add(Convolution2D(32, 3, 3, border_mode='same', input_shape=(3, ch.IMAGE_HEIGHT, ch.IMAGE_WIDTH)))
     model.add(Activation('relu'))
 
     model.add(Convolution2D(32, 3, 3, border_mode='same'))
@@ -40,7 +33,7 @@ def makeCNN():
     model.add(MaxPooling2D(pool_size=(2, 2)))
     model.add(Dropout(0.25))
      
-    model.add(Convolution2D(64, 3, 3, border_mode='same', input_shape=(3, helpers.IMAGE_HEIGHT, helpers.IMAGE_WIDTH)))
+    model.add(Convolution2D(64, 3, 3, border_mode='same', input_shape=(3, ch.IMAGE_HEIGHT, ch.IMAGE_WIDTH)))
     model.add(Activation('relu'))
 
     model.add(MaxPooling2D(pool_size=(2, 2)))
@@ -77,6 +70,21 @@ def makeNormal():
     model.add(Activation("softmax"))
     return model
 
+def make_hera_model():
+    from heraspy.model import HeraModel
+
+    hera_model = HeraModel(
+        {
+            'id': 'my-model' # any ID you want to use to identify your model
+        },
+        {
+            # location of the local hera server, out of the box it's the following
+            'domain': 'localhost',
+            'port': 4000
+        }
+    )
+    return hera_model
+
 #####################
 #####################
 
@@ -103,14 +111,20 @@ if __name__ == '__main__':
     #model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
     model.compile(loss='categorical_crossentropy', optimizer='rmsprop', metrics=['accuracy'])
 
+    hera_model = make_hera_model()
+
+
     print("begin to train")
 
     history = model.fit(training_data_np, training_labels_np,
             nb_epoch = 200, 
             batch_size= 16, 
-            verbose= 2, 
+            verbose= 1, 
             validation_split=0.2,
-            shuffle=True)
+            shuffle=True,
+            callbacks=[hera_model.callback])
+
+
 
     score = model.evaluate(test_data_np, test_labels_np)
    
